@@ -46,11 +46,11 @@ class Ride < ApplicationRecord
 
   def explicit_status
     case status
-      when "created" then "Créé"
-      when "started" then "Démarré"
-      when "completed" then "Terminé"
-      when "cancelled" then "Annulé"
-      else "Erreur: aucun statut trouvé pour ce trajet"
+    when "created" then "Créé"
+    when "started" then "Démarré"
+    when "completed" then "Terminé"
+    when "cancelled" then "Annulé"
+    else "Erreur: aucun statut trouvé pour ce trajet"
     end
   end
 
@@ -66,5 +66,4 @@ class Ride < ApplicationRecord
   def payment_service
     PaymentService.new(ride: self)
   end
-
 end

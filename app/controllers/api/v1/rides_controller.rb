@@ -56,7 +56,4 @@ class Api::V1::RidesController < Api::V1::BaseController
     end
     render json: { errors: error_messages }, status: :unprocessable_entity
   end
-
-
-
 end
