@@ -8,6 +8,16 @@ class Ride < ApplicationRecord
 
   before_validation :generate_token, on: :create
 
+  def explicit_status
+    case status
+      when "created" then "Créé"
+      when "started" then "Démarré"
+      when "completed" then "Terminé"
+      when "cancelled" then "Annulé"
+      else "Erreur: aucun statut trouvé pour ce trajet"
+    end
+  end
+
   private
 
   def generate_token
