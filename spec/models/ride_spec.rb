@@ -56,4 +56,79 @@ RSpec.describe Ride, type: :model do
       expect(r2.errors[:token]).to include("has already been taken")
     end
   end
+
+  describe '#generate_bill' do
+    context 'with created status' do
+      it 'updates ride status to started' do
+        ride = create(:ride)
+        ride.generate_bill
+        expect(ride.started?).to be true
+      end
+    end
+
+    context 'returns false' do
+      it 'with started status' do
+        ride = create(:ride, :with_started_status)
+        expect(ride.generate_bill).to be false
+      end
+      it 'with completed status' do
+        ride = create(:ride, :with_completed_status)
+        expect(ride.generate_bill).to be false
+      end
+      it 'with cancelled status' do
+        ride = create(:ride, :with_cancelled_status)
+        expect(ride.generate_bill).to be false
+      end
+    end
+  end
+
+  describe '#proceed_payment' do
+    context 'with started status' do
+      it 'updates ride status to completed' do
+        ride = create(:ride, :with_started_status)
+        ride.proceed_payment
+        expect(ride.completed?).to be true
+      end
+    end
+
+    context 'returns false' do
+      it 'with created status' do
+        ride = create(:ride)
+        expect(ride.proceed_payment).to be false
+      end
+      it 'with completed status' do
+        ride = create(:ride, :with_completed_status)
+        expect(ride.proceed_payment).to be false
+      end
+      it 'with cancelled status' do
+        ride = create(:ride, :with_cancelled_status)
+        expect(ride.proceed_payment).to be false
+      end
+    end
+  end
+
+  describe '#proceed_reimburse' do
+    context 'with completed status' do
+      it 'updates ride status to cancelled' do
+        ride = create(:ride, :with_completed_status)
+        ride.proceed_reimburse
+        expect(ride.cancelled?).to be true
+      end
+    end
+
+    context 'returns false' do
+      it 'with created status' do
+        ride = create(:ride)
+        expect(ride.proceed_reimburse).to be false
+      end
+      it 'with started status' do
+        ride = create(:ride, :with_started_status)
+        expect(ride.proceed_reimburse).to be false
+      end
+      it 'with cancelled status' do
+        ride = create(:ride, :with_cancelled_status)
+        expect(ride.proceed_reimburse).to be false
+      end
+    end
+  end
 end
