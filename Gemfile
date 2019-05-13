@@ -20,10 +20,12 @@ group :development do
 end
 
 group :development, :test do
+  gem 'dotenv-rails'
+  gem 'factory_bot_rails', '~> 5.0'
+  gem 'listen', '~> 3.0.5'
   gem 'pry-byebug'
   gem 'pry-rails'
-  gem 'listen', '~> 3.0.5'
+  gem 'rspec-rails', '~> 3.8'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
-  gem 'dotenv-rails'
 end
