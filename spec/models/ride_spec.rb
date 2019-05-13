@@ -1,39 +1,39 @@
 require 'rails_helper'
 
 RSpec.describe Ride, type: :model do
-  context 'is valid' do
-    it 'with a status and a unique token of 4 alphanumeric characters'  do
+  context 'with a status and a unique token of 4 alphanumeric characters' do
+    it 'is valid' do
       ride = create(:ride)
       expect(ride).to be_valid
     end
 
-    it 'with a token length equal to 4' do
+    it 'has a length token equal to 4' do
       ride = create(:ride)
       expect(ride.token.length).to eq(4)
     end
 
-    it 'with a status equal to created' do
+    it 'has an initial status equal to created' do
       ride = create(:ride)
       expect(ride.created?).to be true
     end
   end
 
-  context 'is invalid' do
-    it 'without a token' do
+  context 'without status or without a unique token of 4 alphanumeric characters' do
+    it 'is invalid without a token' do
       ride = create(:ride)
       ride.token = nil
       ride.valid?
       expect(ride.errors[:token]).to include("can't be blank")
     end
 
-    it 'without a status' do
+    it 'is invalid without a status' do
       ride = create(:ride)
       ride.status = nil
       ride.valid?
       expect(ride.errors[:status]).to include("can't be blank")
     end
 
-    it 'with a token length different from 4' do
+    it 'is invalid with a token length different from 4' do
       ride = create(:ride)
       ride.token = "aaa11"
       ride.valid?
@@ -41,14 +41,14 @@ RSpec.describe Ride, type: :model do
       # expect(ride.errors[:token]).to include("is the wrong length (should be 4 characters)")
     end
 
-    it 'with a token containing dashes' do
+    it 'is invalid with a token containing dashes' do
       ride = create(:ride)
       ride.token = "a-1_"
       ride.valid?
       expect(ride.errors[:token]).to include("is invalid")
     end
 
-    it 'with a token not unique' do
+    it 'is invalid with a token not unique' do
       r1 = create(:ride)
       r2 = create(:ride)
       r2.token = r1.token
@@ -66,16 +66,16 @@ RSpec.describe Ride, type: :model do
       end
     end
 
-    context 'returns false' do
-      it 'with started status' do
+    context 'without created status' do
+      it 'returns false with started status' do
         ride = create(:ride, :with_started_status)
         expect(ride.generate_bill).to be false
       end
-      it 'with completed status' do
+      it 'returns false with completed status' do
         ride = create(:ride, :with_completed_status)
         expect(ride.generate_bill).to be false
       end
-      it 'with cancelled status' do
+      it 'returns false with cancelled status' do
         ride = create(:ride, :with_cancelled_status)
         expect(ride.generate_bill).to be false
       end
@@ -91,16 +91,16 @@ RSpec.describe Ride, type: :model do
       end
     end
 
-    context 'returns false' do
-      it 'with created status' do
+    context 'without started status' do
+      it 'returns false with created status' do
         ride = create(:ride)
         expect(ride.proceed_payment).to be false
       end
-      it 'with completed status' do
+      it 'returns false with completed status' do
         ride = create(:ride, :with_completed_status)
         expect(ride.proceed_payment).to be false
       end
-      it 'with cancelled status' do
+      it 'returns false with cancelled status' do
         ride = create(:ride, :with_cancelled_status)
         expect(ride.proceed_payment).to be false
       end
@@ -116,16 +116,16 @@ RSpec.describe Ride, type: :model do
       end
     end
 
-    context 'returns false' do
-      it 'with created status' do
+    context 'without completed status' do
+      it 'returns false with created status' do
         ride = create(:ride)
         expect(ride.proceed_reimburse).to be false
       end
-      it 'with started status' do
+      it 'returns false with started status' do
         ride = create(:ride, :with_started_status)
         expect(ride.proceed_reimburse).to be false
       end
-      it 'with cancelled status' do
+      it 'returns false with cancelled status' do
         ride = create(:ride, :with_cancelled_status)
         expect(ride.proceed_reimburse).to be false
       end

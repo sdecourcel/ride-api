@@ -9,15 +9,39 @@ class Ride < ApplicationRecord
   before_validation :generate_token, on: :create
 
   def generate_bill
-    payment_service.bill
+    unless created?
+      errors.add(:status, "Impossible de générer une facture pour un trajet n'ayant pas le statut 'créé' ")
+      return false
+    end
+    unless payment_service.bill
+      errors.add(:status, "Echec de la facturation")
+      return false
+    end
+    started!
   end
 
   def proceed_payment
-    payment_service.pay
+    unless started?
+      errors.add(:status, "Impossible de procéder au paiement pour un trajet n'ayant pas le statut 'démarré' ")
+      return false
+    end
+    unless payment_service.pay
+      errors.add(:status, "Echec du paiement")
+      return false
+    end
+    completed!
   end
 
   def proceed_reimburse
-    payment_service.reimburse
+    unless completed?
+      errors.add(:status, "Impossible de procéder au remboursement pour un trajet n'ayant pas le statut 'terminé' ")
+      return false
+    end
+    unless payment_service.reimburse
+      errors.add(:status, "Echec du remboursement")
+      return false
+    end
+    cancelled!
   end
 
   def explicit_status

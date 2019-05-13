@@ -7,16 +7,16 @@ class PaymentService
 
   def bill
     return false unless @ride && @ride.created?
-    @ride.started!
+    @ride
   end
 
   def pay
     return false unless @ride && @ride.started?
-    @ride.completed!
+    @ride
   end
 
   def reimburse
     return false unless @ride && @ride.completed?
-    @ride.cancelled!
+    @ride
   end
 end
