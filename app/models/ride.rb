@@ -8,6 +8,18 @@ class Ride < ApplicationRecord
 
   before_validation :generate_token, on: :create
 
+  def generate_bill
+    payment_service.bill
+  end
+
+  def proceed_payment
+    payment_service.pay
+  end
+
+  def proceed_reimburse
+    payment_service.reimburse
+  end
+
   def explicit_status
     case status
       when "created" then "Créé"
@@ -25,6 +37,10 @@ class Ride < ApplicationRecord
       random_token = SecureRandom.hex(2)
       break random_token unless self.class.exists?(token: random_token)
     end
+  end
+
+  def payment_service
+    PaymentService.new(ride: self)
   end
 
 end
